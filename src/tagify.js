@@ -6,7 +6,7 @@ import TEXTS from './parts/texts'
 import templates from './parts/templates'
 import EventDispatcher from './parts/EventDispatcher'
 import events, { triggerChangeEvent } from './parts/events'
-import { UPDATE_DELAY } from './parts/constants'
+import { UPDATE_DELAY, ZERO_WIDTH_CHAR } from './parts/constants'
 
 /**
  * @constructor
@@ -473,6 +473,17 @@ Tagify.prototype = {
         } catch(err){
             console.warn(err)
         }
+    },
+
+    insertBeforeTag( tagElm, newNode ){
+        if( !tagElm || !tagElm.parentNode || !newNode ) return
+            
+        newNode = typeof newNode == 'string'
+            ? document.createTextNode(newNode)
+            : newNode
+            
+        tagElm.parentNode.insertBefore(newNode, tagElm)
+        return newNode
     },
 
     insertAfterTag( tagElm, newNode ){
@@ -1570,6 +1581,7 @@ Tagify.prototype = {
 
         if( !createdFromDelimiters ) {
             var elm = this.insertAfterTag(tagElm) || tagElm;
+            this.insertBeforeTag(tagElm, ZERO_WIDTH_CHAR)
             // a timeout is needed when selecting a tag from the suggestions via mouse.
             // Without it, it seems the caret is placed right after the tag and not after the
             // node which was inserted after the tag (whitespace by default)

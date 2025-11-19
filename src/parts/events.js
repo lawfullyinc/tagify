@@ -482,7 +482,7 @@ export default {
                             case 'Enter' : {
                                 e.preventDefault(); // solves Chrome bug - http://stackoverflow.com/a/20398191/104380
 
-                                if(this.state.tag) return; // assume a tag has just been added, so no need to create a new line
+                                if(this.state.tag && this.state.tag.value && this.state?.dropdown?.suggestions?.length > 0) return; // assume a tag has just been added, so no need to create a new line. If there are suggestions, it means the user has selected a tag from the dropdown.
                                 // https://stackoverflow.com/a/72279112/104380
                                 let selection = window.getSelection();
                                 let range = selection.getRangeAt(0);
